@@ -1,0 +1,267 @@
+{
+  "info": {
+    "name": "Twitter API (FSWEB-s19-Challenge)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{userName}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{password}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "userName",
+      "value": "aleyna"
+    },
+    {
+      "key": "password",
+      "value": "123456"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"aleyna\",\n  \"email\": \"aleyna@mail.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"aleyna\",\n  \"password\": \"123456\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tweet",
+      "item": [
+        {
+          "name": "Create tweet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tweet",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"İlk tweetim!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Find by userId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tweet/findByUserId?userId=1",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Find by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tweet/findById?id=1",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Update tweet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tweet/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Güncellenmiş tweet\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete tweet",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tweet/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comment",
+      "item": [
+        {
+          "name": "Create comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/comment/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tweetId\": 1,\n  \"content\": \"Güzel tweet\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update comment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/comment/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Düzenlenmiş yorum\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/comment/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like",
+      "item": [
+        {
+          "name": "Like",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/like/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tweetId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Dislike",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/dislike/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tweetId\": 1\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Retweet",
+      "item": [
+        {
+          "name": "Retweet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/retweet/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tweetId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete retweet",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/retweet/1"
+          }
+        }
+      ]
+    }
+  ]
+}

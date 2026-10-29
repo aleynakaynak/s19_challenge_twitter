@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #f5f8fa; color: #0f1419; }
+.container { max-width: 600px; margin: 0 auto; padding: 24px 16px; }
+h1 { margin: 0 0 4px; color: #1d9bf0; }
+.subtitle { margin: 0 0 20px; color: #536471; font-size: 14px; }
+.search { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; }
+.search input { width: 100px; padding: 8px; border: 1px solid #cfd9de; border-radius: 8px; }
+.search button { padding: 8px 16px; border: 0; border-radius: 999px; background: #1d9bf0; color: #fff; font-weight: 600; cursor: pointer; }
+.tweets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.tweet { background: #fff; border: 1px solid #e1e8ed; border-radius: 12px; padding: 14px 16px; }
+.tweet-head { display: flex; justify-content: space-between; font-size: 14px; color: #536471; }
+.tweet-head strong { color: #0f1419; }
+.tweet p { margin: 8px 0; white-space: pre-wrap; }
+.tweet-stats { display: flex; gap: 20px; font-size: 14px; color: #536471; }
+.info { color: #536471; }
+.error { color: #f4212e; background: #fdecee; padding: 10px 12px; border-radius: 8px; }

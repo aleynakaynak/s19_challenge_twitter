@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Frontend ###
+twitter-frontend/node_modules/
+twitter-frontend/dist/
