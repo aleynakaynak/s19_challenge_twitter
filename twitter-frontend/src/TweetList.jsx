@@ -1,57 +1,62 @@
 import { useEffect, useState } from 'react'
-import { fetchTweetsByUserId } from './api'
+import { fetchTweetsByUserId, getErrorMessage, likeTweet } from './api'
 
-function formatDate(value) {
-  if (!value) return ''
-  return new Date(value).toLocaleString('tr-TR')
-}
-
-export default function TweetList({ userId }) {
+export default function TweetList({ userId, refresh, canLike, onRefresh }) {
   const [tweets, setTweets] = useState([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [liking, setLiking] = useState(null)
 
   useEffect(() => {
+    let active = true
+    setActionError('')
     if (!userId) return
     setLoading(true)
-    setError(null)
+    setError('')
     fetchTweetsByUserId(userId)
-      .then(setTweets)
+      .then((data) => { if (active) setTweets(data) })
       .catch((err) => {
-        setTweets([])
-        if (err.response) {
-          // Sunucu cevap verdi ama hata döndü (ör. 404 kullanıcı yok)
-          setError(err.response.data?.message || `Hata: ${err.response.status}`)
-        } else {
-          // Cevap hiç okunamadı: CORS engeli ya da API kapalı
-          setError(
-            'API\'ye ulaşılamadı. Backend 3000 portunda çalışıyor mu? Çalışıyorsa tarayıcı konsolunda CORS hatası olabilir.'
-          )
-        }
+        if (active) { setTweets([]); setError(getErrorMessage(err)) }
       })
-      .finally(() => setLoading(false))
-  }, [userId])
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [userId, refresh])
 
-  if (loading) return <p className="info">Yükleniyor...</p>
-  if (error) return <p className="error">{error}</p>
-  if (tweets.length === 0) return <p className="info">Bu kullanıcının henüz tweeti yok.</p>
+  async function handleLike(tweetId) {
+    setLiking(tweetId)
+    setActionError('')
+    try {
+      await likeTweet(tweetId)
+      onRefresh()
+    } catch (err) {
+      setActionError(getErrorMessage(err))
+    } finally {
+      setLiking(null)
+    }
+  }
 
-  return (
+  if (!userId) return <p>Kullanıcı ID girerek tweetleri listeleyebilirsiniz.</p>
+  if (loading) return <p role="status">Yükleniyor…</p>
+  if (error) return <p role="alert" className="error">{error}</p>
+
+  return <>
+    {actionError && <p role="alert" className="error">{actionError}</p>}
+    {tweets.length === 0 && <p>Bu kullanıcının henüz tweeti yok.</p>}
     <ul className="tweets">
-      {tweets.map((tweet) => (
-        <li key={tweet.id} className="tweet">
-          <div className="tweet-head">
-            <strong>@{tweet.userName}</strong>
-            <span>{formatDate(tweet.createdAt)}</span>
-          </div>
-          <p>{tweet.content}</p>
-          <div className="tweet-stats">
-            <span>💬 {tweet.commentCount}</span>
-            <span>🔁 {tweet.retweetCount}</span>
-            <span>❤️ {tweet.likeCount}</span>
-          </div>
-        </li>
-      ))}
+      {tweets.map((tweet) => <li key={tweet.id} className="tweet">
+        <div className="tweet-head"><strong>@{tweet.userName}</strong>
+          <time>{tweet.createdAt ? new Date(tweet.createdAt).toLocaleString('tr-TR') : ''}</time></div>
+        <p className="tweet-content">{tweet.content}</p>
+        <div className="tweet-stats">
+          <span>Yorum: {tweet.commentCount}</span><span>Retweet: {tweet.retweetCount}</span>
+          <button type="button" className="secondary" disabled={!canLike || liking !== null}
+            onClick={() => handleLike(tweet.id)} aria-label={`Tweet ${tweet.id} beğen`}>
+            {liking === tweet.id ? 'Bekleyin…' : `♡ Beğen (${tweet.likeCount})`}
+          </button>
+        </div>
+      </li>)}
     </ul>
-  )
+    {!canLike && <p className="hint">Tweet paylaşmak ve beğenmek için giriş yapın.</p>}
+  </>
 }

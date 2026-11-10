@@ -1,7 +1,7 @@
 # Twitter API — FSWEB-s19-Challenge
 
 Workintech Full Stack programı **Sprint 19/20 Twitter Clone** projesi.
-Spring Boot ve PostgreSQL ile yazılmış bir Twitter backend'i, yanında da CORS'u göstermek için küçük bir React ön yüzü var.
+Spring Boot ve PostgreSQL ile yazılmış bir Twitter backend'i, yanında kayıt/giriş, tweet oluşturma, listeleme ve beğenme işlemleri için basit bir React ön yüzü var.
 
 - Gereksinimler: [Workintech/FSWEB-s19-Challenge](https://github.com/Workintech/FSWEB-s19-Challenge)
 - Başlangıç iskeleti: [swoopertr/s19_challenge_twitter](https://github.com/swoopertr/s19_challenge_twitter)
@@ -86,11 +86,17 @@ npm install
 npm run dev
 ```
 
-`http://localhost:3200` adresini açın, bir kullanıcı ID girip **Getir**'e basın.
+`http://localhost:3200` adresini açın. **Kayıt ol**, ardından **Giriş yap** adımlarını izleyin.
+Tweet paylaşınca kendi listeniz; beğenince görüntülenen liste API'den yeniden çekilir.
+Kullanıcı ID alanından başka bir kullanıcının tweetlerini de listeleyebilirsiniz.
+Kimlik bilgileri yalnızca açık sekmenin belleğinde tutulur; sayfayı yenileyince tekrar giriş gerekir.
+Ekran sade tutulmuştur; yorum, dislike, retweet ve silme/güncelleme API'de ve Postman koleksiyonunda bulunur.
+
+Mac kurulumu ve 5 dakikalık Loom hazırlığı için [KURULUM_VE_SUNUM.md](KURULUM_VE_SUNUM.md) dosyasını okuyun.
 
 ## Güvenlik
 
-- `POST /register` ve `POST /login` herkese açıktır. Şifreler BCrypt ile şifrelenip saklanır.
+- `POST /register` ve `POST /login` herkese açıktır. Şifreler BCrypt ile hash'lenerek saklanır.
 - Tweet okuma uçları (`GET /tweet/**`) herkese açıktır.
 - Diğer tüm uçlar **HTTP Basic Auth** ister. Kullanıcı adı ve şifre her istekte `Authorization` başlığında gönderilir.
 - İşlemi yapan kullanıcı her zaman giriş yapmış kullanıcıdır. Gövdeye başka birinin `userId`'si yazılarak onun adına tweet atılamaz.
@@ -102,7 +108,7 @@ npm run dev
 
 ## Endpointler
 
-Tüm hatalar tek merkezden (`GlobalExceptionHandler`) aynı formatta döner:
+Controller ve servis hataları tek merkezden (`GlobalExceptionHandler`) aynı formatta döner. Security filtrelerinin kimlik doğrulama hataları controller öncesinde oluşabilir:
 
 ```json
 { "message": "Tweet bulunamadı: 5", "status": 404, "timestamp": 1793276088837 }
@@ -182,7 +188,7 @@ Tüm origin'lere (`*`) izin vermek yerine yalnızca ön yüzün adresine izin ve
 
 ## Testler
 
-`src/test` altında servis katmanı ve hata yönetimi için Mockito ile yazılmış **31 unit test** var.
+`src/test` altında servis katmanı ve hata yönetimi için Mockito ile yazılmış **31 unit test** ve tam Spring context üzerinde **1 entegrasyon testi** var.
 
 | Test sınıfı | Test edilen |
 |---|---|
@@ -194,4 +200,14 @@ Tüm origin'lere (`*`) izin vermek yerine yalnızca ön yüzün adresine izin ve
 | `UserServiceImplTest` | Spring Security kullanıcı yükleme |
 | `GlobalExceptionHandlerTest` | Hata formatı ve durum kodları |
 
-Servis katmanındaki public metodların büyük çoğunluğu test edilmiştir (README'de istenen oran %30).
+`ApiIntegrationTest`, kayıt/giriş, validation, yetki, tweet/yorum/beğeni/retweet ve CORS akışını JPA ile birlikte H2'nin PostgreSQL modunda doğrular. H2 yalnızca test bağımlılığıdır; normal uygulama PostgreSQL kullanır.
+Mockito, modern Java sürümlerinde test başlangıcında javaagent olarak yüklenir.
+
+## Doğrulama — 30 Ekim 2026
+
+- JDK 21 ile `./mvnw clean test`: **32 test, 0 başarısızlık, 0 hata**.
+- React `npm ci` ve `npm run build`: başarılı.
+- Chromium üzerinde gerçek Spring Boot HTTP API + H2 test veritabanı ile kayıt, hatalı/doğru giriş, tweet paylaşma, beğenme, tekrar beğenme hatası, liste yenileme, çıkış, sayfa yenileme ve 375 px mobil taşma kontrolü: başarılı.
+- CORS kontrolü Security entegrasyon testinde ve localhost:3200 → localhost:3000 tarayıcı akışında geçti.
+- Gerçek PostgreSQL üzerinde yerel çalıştırma ve Loom kaydı teslimden önce tamamlanmalıdır.
+- Test sayısı kod kapsamı yüzdesiyle aynı şey değildir; ölçülmüş satır kapsamı iddiası yoktur.
