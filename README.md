@@ -92,7 +92,6 @@ Kullanıcı ID alanından başka bir kullanıcının tweetlerini de listeleyebil
 Kimlik bilgileri yalnızca açık sekmenin belleğinde tutulur; sayfayı yenileyince tekrar giriş gerekir.
 Ekran sade tutulmuştur; yorum, dislike, retweet ve silme/güncelleme API'de ve Postman koleksiyonunda bulunur.
 
-Mac kurulumu ve 5 dakikalık Loom hazırlığı için [KURULUM_VE_SUNUM.md](KURULUM_VE_SUNUM.md) dosyasını okuyun.
 
 ## Güvenlik
 
