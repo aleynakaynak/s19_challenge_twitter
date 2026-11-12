@@ -203,11 +203,9 @@ Tüm origin'lere (`*`) izin vermek yerine yalnızca ön yüzün adresine izin ve
 `ApiIntegrationTest`, kayıt/giriş, validation, yetki, tweet/yorum/beğeni/retweet ve CORS akışını JPA ile birlikte H2'nin PostgreSQL modunda doğrular. H2 yalnızca test bağımlılığıdır; normal uygulama PostgreSQL kullanır.
 Mockito, modern Java sürümlerinde test başlangıcında javaagent olarak yüklenir.
 
-## Doğrulama — 30 Ekim 2026
+## Doğrulama — 12 Kasım 2026
 
-- JDK 21 ile `./mvnw clean test`: **32 test, 0 başarısızlık, 0 hata**.
-- React `npm ci` ve `npm run build`: başarılı.
-- Chromium üzerinde gerçek Spring Boot HTTP API + H2 test veritabanı ile kayıt, hatalı/doğru giriş, tweet paylaşma, beğenme, tekrar beğenme hatası, liste yenileme, çıkış, sayfa yenileme ve 375 px mobil taşma kontrolü: başarılı.
-- CORS kontrolü Security entegrasyon testinde ve localhost:3200 → localhost:3000 tarayıcı akışında geçti.
-- Gerçek PostgreSQL üzerinde yerel çalıştırma ve Loom kaydı teslimden önce tamamlanmalıdır.
+- JDK 21 ile `./mvnw test`: 32 test, 0 başarısızlık, 0 hata.
+- Gerçek PostgreSQL 17 üzerinde yerel çalıştırma: kayıt, giriş, tweet, listeleme ve beğenme akışı çalıştı.
+- React (localhost:3200) → Spring Boot (localhost:3000) isteklerinde CORS hatası alınmıyor; tekrar beğenme 409 hatası ekranda gösteriliyor.
 - Test sayısı kod kapsamı yüzdesiyle aynı şey değildir; ölçülmüş satır kapsamı iddiası yoktur.
