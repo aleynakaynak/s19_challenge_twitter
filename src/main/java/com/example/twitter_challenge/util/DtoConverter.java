@@ -27,7 +27,6 @@ public final class DtoConverter {
         return new TweetResponse(
                 tweet.getId(),
                 tweet.getContent(),
-                tweet.getUser().getId(),
                 tweet.getUser().getUserName(),
                 tweet.getLikes().size(),
                 tweet.getComments().size(),
@@ -41,8 +40,6 @@ public final class DtoConverter {
         return new CommentResponse(
                 comment.getId(),
                 comment.getContent(),
-                comment.getTweet().getId(),
-                comment.getUser().getId(),
                 comment.getUser().getUserName(),
                 comment.getCreatedAt()
         );
@@ -51,8 +48,6 @@ public final class DtoConverter {
     public static RetweetResponse toRetweetResponse(Retweet retweet) {
         return new RetweetResponse(
                 retweet.getId(),
-                retweet.getTweet().getId(),
-                retweet.getUser().getId(),
                 retweet.getUser().getUserName(),
                 retweet.getCreatedAt()
         );

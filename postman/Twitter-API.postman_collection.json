@@ -160,10 +160,10 @@
                 "value": "application/json"
               }
             ],
-            "url": "{{baseUrl}}/comment/",
+            "url": "{{baseUrl}}/comment/1",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"tweetId\": 1,\n  \"content\": \"Güzel tweet\"\n}"
+              "raw": "{\n  \"content\": \"Güzel tweet\"\n}"
             }
           }
         },
@@ -201,34 +201,16 @@
           "name": "Like",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/like/",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tweetId\": 1\n}"
-            }
+            "header": [],
+            "url": "{{baseUrl}}/like/1"
           }
         },
         {
           "name": "Dislike",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/dislike/",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tweetId\": 1\n}"
-            }
+            "header": [],
+            "url": "{{baseUrl}}/dislike/1"
           }
         }
       ]
@@ -240,17 +222,8 @@
           "name": "Retweet",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/retweet/",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tweetId\": 1\n}"
-            }
+            "header": [],
+            "url": "{{baseUrl}}/retweet/1"
           }
         },
         {

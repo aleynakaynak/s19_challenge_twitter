@@ -60,7 +60,6 @@ class TweetServiceImplTest {
 
         assertThat(response.id()).isEqualTo(99L);
         assertThat(response.content()).isEqualTo("İlk tweetim");
-        assertThat(response.userId()).isEqualTo(1L);
         assertThat(response.userName()).isEqualTo("aleyna");
     }
 

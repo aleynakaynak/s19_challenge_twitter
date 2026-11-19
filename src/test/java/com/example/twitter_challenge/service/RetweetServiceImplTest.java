@@ -60,7 +60,7 @@ class RetweetServiceImplTest {
         RetweetResponse response = retweetService.retweet(10L, "mehmet");
 
         assertThat(response.id()).isEqualTo(7L);
-        assertThat(response.tweetId()).isEqualTo(10L);
+        assertThat(response.userName()).isEqualTo("mehmet");
         assertThat(tweet.getRetweets()).hasSize(1);
     }
 

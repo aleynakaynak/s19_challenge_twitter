@@ -34,7 +34,7 @@ public class LikeServiceImpl implements LikeService {
         Likes like = new Likes(user, tweet);
         tweet.getLikes().add(like);
         likeRepository.save(like);
-        return new LikeResponse(tweet.getId(), user.getId(), tweet.getLikes().size(), true);
+        return new LikeResponse(tweet.getLikes().size(), true);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class LikeServiceImpl implements LikeService {
                 .orElseThrow(() -> new TwitterException("Bu tweeti beğenmemişsiniz", HttpStatus.NOT_FOUND));
         tweet.getLikes().remove(like);
         likeRepository.delete(like);
-        return new LikeResponse(tweet.getId(), user.getId(), tweet.getLikes().size(), false);
+        return new LikeResponse(tweet.getLikes().size(), false);
     }
 }

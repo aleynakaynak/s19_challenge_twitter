@@ -134,18 +134,25 @@ Controller ve servis hataları tek merkezden (`GlobalExceptionHandler`) aynı fo
 
 | Metot | URL | Gövde |
 |---|---|---|
-| POST | `/comment/` | `{"tweetId":1,"content":"..."}` |
+| POST | `/comment/{tweetId}` | `{"content":"..."}` |
 | PUT | `/comment/{id}` | `{"content":"..."}` |
 | DELETE | `/comment/{id}` | yok |
-| POST | `/like/` | `{"tweetId":1}` |
-| POST | `/dislike/` | `{"tweetId":1}`: atılmış beğeniyi geri alır |
+| POST | `/like/{tweetId}` | yok |
+| POST | `/dislike/{tweetId}` | yok: atılmış beğeniyi geri alır |
 
 ### Retweet (HARD)
 
 | Metot | URL | Gövde |
 |---|---|---|
-| POST | `/retweet/` | `{"tweetId":1}`. Aynı tweet ikinci kez retweet edilirse 409 döner |
-| DELETE | `/retweet/{id}` | Retweeti geri alır |
+| POST | `/retweet/{tweetId}` | yok. Aynı tweet ikinci kez retweet edilirse 409 döner |
+| DELETE | `/retweet/{id}` | `{id}` retweet kaydının id'sidir; retweeti geri alır |
+
+### DTO tasarımı
+
+- İstek DTO'ları yalnızca veri taşır (`content`, `userName`, `password` gibi). Hangi kayıt üzerinde işlem yapıldığı (`tweetId`, yorum id'si) URL'den gelir, gövdeye id yazılmaz.
+- İşlemi yapan kullanıcının kimliği her zaman Spring Security'den alınır; istekte `userId` yoktur.
+- Cevap DTO'ları yalnızca kaydın kendi id'sini döner (ör. tweet id'si, ön yüzün beğenme/silme için ihtiyaç duyduğu tek id). İlişkili kullanıcı `userId` yerine `userName` ile gösterilir; şifre hiçbir cevapta yer almaz.
+- `UserResponse` kullanıcının id'sini döner, çünkü proje gereksinimindeki `GET /tweet/findByUserId` uç noktası bu id ile çalışır.
 
 ### Örnek akış (curl)
 
@@ -158,7 +165,10 @@ curl -u aleyna:123456 -X POST localhost:3000/tweet -H "Content-Type: application
 
 curl "localhost:3000/tweet/findByUserId?userId=1"
 
-curl -u aleyna:123456 -X POST localhost:3000/like/ -H "Content-Type: application/json" -d '{"tweetId":1}'
+curl -u aleyna:123456 -X POST localhost:3000/like/1
+
+curl -u aleyna:123456 -X POST localhost:3000/comment/1 -H "Content-Type: application/json" \
+  -d '{"content":"Güzel tweet"}'
 ```
 
 Hazır istekler için `postman/Twitter-API.postman_collection.json` dosyasını Postman'e import edebilirsiniz.

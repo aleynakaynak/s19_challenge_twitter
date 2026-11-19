@@ -2,7 +2,6 @@ package com.example.twitter_challenge.service;
 
 import com.example.twitter_challenge.dto.CommentRequest;
 import com.example.twitter_challenge.dto.CommentResponse;
-import com.example.twitter_challenge.dto.CommentUpdateRequest;
 import com.example.twitter_challenge.entity.Comment;
 import com.example.twitter_challenge.entity.Tweet;
 import com.example.twitter_challenge.entity.User;
@@ -28,9 +27,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse create(CommentRequest request, String userName) {
+    public CommentResponse create(Long tweetId, CommentRequest request, String userName) {
         User user = userService.findByUserName(userName);
-        Tweet tweet = tweetService.getTweetEntity(request.tweetId());
+        Tweet tweet = tweetService.getTweetEntity(tweetId);
         Comment comment = new Comment(request.content(), user, tweet);
         tweet.getComments().add(comment);
         return DtoConverter.toCommentResponse(commentRepository.save(comment));
@@ -38,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse update(Long id, CommentUpdateRequest request, String userName) {
+    public CommentResponse update(Long id, CommentRequest request, String userName) {
         Comment comment = getComment(id);
         if (!comment.getUser().getUserName().equals(userName)) {
             throw new TwitterException("Sadece kendi yorumunuzu güncelleyebilirsiniz", HttpStatus.FORBIDDEN);

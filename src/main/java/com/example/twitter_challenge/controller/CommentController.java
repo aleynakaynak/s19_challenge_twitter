@@ -2,7 +2,6 @@ package com.example.twitter_challenge.controller;
 
 import com.example.twitter_challenge.dto.CommentRequest;
 import com.example.twitter_challenge.dto.CommentResponse;
-import com.example.twitter_challenge.dto.CommentUpdateRequest;
 import com.example.twitter_challenge.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,15 +25,19 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping({"", "/"})
+    // [POST] /comment/{tweetId}  body: { "content": "..." }
+    @PostMapping("/{tweetId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponse create(@Valid @RequestBody CommentRequest request, Authentication authentication) {
-        return commentService.create(request, authentication.getName());
+    public CommentResponse create(@PathVariable Long tweetId,
+                                  @Valid @RequestBody CommentRequest request,
+                                  Authentication authentication) {
+        return commentService.create(tweetId, request, authentication.getName());
     }
 
+    // [PUT] /comment/{id}  body: { "content": "..." }
     @PutMapping("/{id}")
     public CommentResponse update(@PathVariable Long id,
-                                  @Valid @RequestBody CommentUpdateRequest request,
+                                  @Valid @RequestBody CommentRequest request,
                                   Authentication authentication) {
         return commentService.update(id, request, authentication.getName());
     }

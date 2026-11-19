@@ -36,7 +36,7 @@ export async function createTweet(content) {
 }
 
 export async function likeTweet(tweetId) {
-  const response = await api.post('/like', { tweetId }, authConfig())
+  const response = await api.post(`/like/${tweetId}`, null, authConfig())
   return response.data
 }
 

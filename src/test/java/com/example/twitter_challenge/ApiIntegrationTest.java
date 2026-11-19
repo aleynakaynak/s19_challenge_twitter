@@ -48,27 +48,26 @@ class ApiIntegrationTest {
         mvc.perform(put("/tweet/1").with(httpBasic("owner", "password123"))
                 .contentType("application/json").content("{\"content\":\"Güncel tweet\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.content").value("Güncel tweet"));
-        mvc.perform(post("/comment/").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1,\"content\":\"Yorum\"}"))
+        mvc.perform(post("/comment/1").with(httpBasic("other", "password123"))
+                .contentType("application/json").content("{\"content\":\"Yorum\"}"))
                 .andExpect(status().isCreated());
         mvc.perform(put("/comment/1").with(httpBasic("other", "password123"))
                 .contentType("application/json").content("{\"content\":\"Güncel yorum\"}"))
                 .andExpect(status().isOk());
-        mvc.perform(post("/like").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/like/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.likeCount").value(1));
-        mvc.perform(post("/like").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/like/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isConflict());
-        mvc.perform(post("/retweet/").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/retweet/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isCreated());
         mvc.perform(get("/tweet/findByUserId").param("userId", "1")
                 .header("Origin", "http://localhost:3200"))
                 .andExpect(status().isOk()).andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3200"))
                 .andExpect(jsonPath("$[0].likeCount").value(1))
                 .andExpect(jsonPath("$[0].commentCount").value(1))
-                .andExpect(jsonPath("$[0].retweetCount").value(1));
+                .andExpect(jsonPath("$[0].retweetCount").value(1))
+                .andExpect(jsonPath("$[0].userName").value("owner"))
+                .andExpect(jsonPath("$[0].userId").doesNotExist());
         mvc.perform(options("/tweet").header("Origin", "http://localhost:3200")
                 .header("Access-Control-Request-Method", "POST")
                 .header("Access-Control-Request-Headers", "authorization,content-type"))
@@ -81,22 +80,19 @@ class ApiIntegrationTest {
                 .andExpect(status().isForbidden());
         mvc.perform(delete("/retweet/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isNoContent());
-        mvc.perform(post("/dislike").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/dislike/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.likeCount").value(0));
         mvc.perform(delete("/comment/1").with(httpBasic("owner", "password123")))
                 .andExpect(status().isNoContent());
         mvc.perform(delete("/tweet/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isForbidden());
         // İlişkili kayıtlar varken tweet silme de doğrulanır.
-        mvc.perform(post("/comment/").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1,\"content\":\"Tekrar\"}"))
+        mvc.perform(post("/comment/1").with(httpBasic("other", "password123"))
+                .contentType("application/json").content("{\"content\":\"Tekrar\"}"))
                 .andExpect(status().isCreated());
-        mvc.perform(post("/like").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/like/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isOk());
-        mvc.perform(post("/retweet/").with(httpBasic("other", "password123"))
-                .contentType("application/json").content("{\"tweetId\":1}"))
+        mvc.perform(post("/retweet/1").with(httpBasic("other", "password123")))
                 .andExpect(status().isCreated());
         mvc.perform(delete("/tweet/1").with(httpBasic("owner", "password123")))
                 .andExpect(status().isNoContent());

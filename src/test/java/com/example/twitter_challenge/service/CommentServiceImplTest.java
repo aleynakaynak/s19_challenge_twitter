@@ -2,7 +2,6 @@ package com.example.twitter_challenge.service;
 
 import com.example.twitter_challenge.dto.CommentRequest;
 import com.example.twitter_challenge.dto.CommentResponse;
-import com.example.twitter_challenge.dto.CommentUpdateRequest;
 import com.example.twitter_challenge.entity.Comment;
 import com.example.twitter_challenge.entity.Tweet;
 import com.example.twitter_challenge.entity.User;
@@ -62,7 +61,7 @@ class CommentServiceImplTest {
         when(tweetService.getTweetEntity(10L)).thenReturn(tweet);
         when(commentRepository.save(any(Comment.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        CommentResponse response = commentService.create(new CommentRequest(10L, "Katılıyorum"), "ayse");
+        CommentResponse response = commentService.create(10L, new CommentRequest("Katılıyorum"), "ayse");
 
         assertThat(response.content()).isEqualTo("Katılıyorum");
         assertThat(response.userName()).isEqualTo("ayse");
@@ -74,7 +73,7 @@ class CommentServiceImplTest {
         when(commentRepository.findById(50L)).thenReturn(Optional.of(comment));
         when(commentRepository.save(comment)).thenReturn(comment);
 
-        CommentResponse response = commentService.update(50L, new CommentUpdateRequest("Düzenlendi"), "mehmet");
+        CommentResponse response = commentService.update(50L, new CommentRequest("Düzenlendi"), "mehmet");
 
         assertThat(response.content()).isEqualTo("Düzenlendi");
     }
@@ -83,7 +82,7 @@ class CommentServiceImplTest {
     void update_throwsForbidden_forOtherUser() {
         when(commentRepository.findById(50L)).thenReturn(Optional.of(comment));
 
-        assertThatThrownBy(() -> commentService.update(50L, new CommentUpdateRequest("x"), "aleyna"))
+        assertThatThrownBy(() -> commentService.update(50L, new CommentRequest("x"), "aleyna"))
                 .isInstanceOf(TwitterException.class);
     }
 
